@@ -5,6 +5,22 @@ var ss = SpreadsheetApp.getActiveSpreadsheet(),
     settings = {};
     
 var geocoders = {
+    google: {
+        query: function(query, key) {
+            return 'https://maps.googleapis.com/maps/api/geocode/json?address=' + query + '&key=' + key;
+        },
+        parse: function(r) {
+            try {
+                return {
+                    longitude: r.results[0].geometry.location.lon,
+                    latitude: r.results[0].geometry.location.lat,
+                    accuracy: r.results[0].geometry.location_type
+                }
+            } catch(e) {
+                return { longitude: '', latitude: '', accuracy: '' };
+            }
+        }
+    },
     yahoo: {
       query: function(query, key) {
         return 'http://where.yahooapis.com/geocode?appid=' +
